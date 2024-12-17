@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Структура для вузла дерева
+typedef struct Node {
+    char character;
+    struct Node *left, *right;
+} Node;
+
+// Функція для декодування
+void decode(Node *root, const char *encodedStr) {
+    Node *current = root;
+    for (int i = 0; i < strlen(encodedStr); i++) {
+        current = (encodedStr[i] == '0') ? current->left : current->right;
+
+        // Якщо поточний вузол листок, вивести символ і повернутися до кореня
+        if (current->left == NULL && current->right == NULL) {
+            printf("%c", current->character);
+            current = root;
+        }
+    }
+}
+
+// Функція для створення нового вузла дерева
+Node* newNode(char character) {
+    Node *node = (Node*) malloc(sizeof(Node));
+    node->character = character;
+    node->left = node->right = NULL;
+    return node;
+}
+
+int main() {
+    // Приклад дерева Хаффмана (декодування для 'a' -> 0, 'b' -> 10, 'c' -> 11)
+    Node *root = newNode('\0');
+    root->left = newNode('a');
+    root->right = newNode('\0');
+    root->right->left = newNode('b');
+    root->right->right = newNode('c');
+
+    // Приклад закодованої строки
+    const char *encodedStr = "01011101";
+
+    // Декодування
+    decode(root, encodedStr);
+    return 0;
+}
